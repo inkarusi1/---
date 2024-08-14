@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+    block: {{ block }}
+    <h1>{{ block.block_name }}</h1>
+</head>
+<body>
+
+    <form action="{% url 'archive:modify_block' block.block_id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ block.block_name }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+        <label for="bn">block_name: </label>
+        <input type="text" name="block_name" id="bn" value="{{ block.block_name }}" >
+        <br />
+        <label for="bnz">block_name_zh: </label>
+        <input type="text" name="block_name_zh" id="bnz" value="{{ block.block_name_zh }}" >
+        <br />
+        <label for="lan">language: </label>
+        <input type="text" name="lang" id="lan" value="{{ block.lang }}" >
+        <br />
+        <label for="func">function: </label>
+        <input type="text" name="func" id="func" value="{{ block.block_function }}" >
+        <br />
+        <label for="module">module: </label>
+        <input type="text" name="module" id="module" value="{{ block.in_module }}" >
+        <br />
+        <label for="code">code: </label>
+<!--        <input type="text" name="code" id="code" value="{{ block.code }}" >-->
+        <textarea name="code" id="code" cols="30" rows="10">{{ block.code }}</textarea>
+    </fieldset>
+    <input type="submit" value="ModifyBlock">
+    </form>
+
+    <ul>
+        <li>id: {{ block.block_id }}</li>
+        <li>block_name: {{ block.block_name }}</li>
+        <li>block_name_zh: {{ block.block_name_zh }}</li>
+        <li>language: {{ block.lang }}</li>
+        <li>function: {{ block.block_function }}</li>
+        <li>module: {{ block.in_module }}</li>
+        <li>code: {{ block.code }}</li>
+    </ul>
+
+    <br />
+    <a href="{% url 'archive:delete_block' block.block_id %}">删除</a>
+    <a href="{% url 'archive:index' %}">返回archive</a>
+
+
+</body>
+</html>

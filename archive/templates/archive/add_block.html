@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add</title>
+</head>
+<body>
+
+<form action="{% url 'archive:add_block' %}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>new code block</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <label for="bn">block_name: </label>
+    <input type="text" name="block_name" id="bn" value="" >
+    <br />
+    <label for="bnz">block_name_zh: </label>
+    <input type="text" name="block_name_zh" id="bnz" value="" >
+    <br />
+    <label for="lan">language: </label>
+    <input type="text" name="lang" id="lan" value="" >
+    <br />
+    <label for="func">function: </label>
+    <input type="text" name="func" id="func" value="" >
+    <br />
+    <label for="module">module: </label>
+    <input type="text" name="module" id="module" value="" >
+    <br />
+    <label for="code">code: </label>
+    <textarea name="code" id="code" cols="30" rows="10"></textarea>
+    <br />
+    <br />
+    <label for="children">children: </label>
+    e.g.: <p style="color: red">"test1","test2"</p>
+    <br />
+    <textarea name="children" id="children" cols="30" rows="10"></textarea>
+<!--    <input type="text" name="code" id="code" value="" >-->
+
+</fieldset>
+<input type="submit" value="AddBlock">
+</form>
+
+<br />
+<a href="{% url 'archive:index' %}" >返回archive</a>
+
+</body>
+</html>

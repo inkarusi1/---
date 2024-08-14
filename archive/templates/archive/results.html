@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results</title>
+</head>
+<body>
+
+block: {{ block }}
+<h1>{{ block.block_name }}</h1>
+
+<ul>
+    <li>id: {{ block.block_id }}</li>
+    <li>block_name: {{ block.block_name }}</li>
+    <li>block_name_zh: {{ block.block_name_zh }}</li>
+    <li>language: {{ block.lang }}</li>
+    <li>function: {{ block.block_function }}</li>
+    <li>module: {{ block.in_module }}</li>
+    <li>code: {{ block.code }}</li>
+</ul>
+
+<a href="{% url 'archive:modify_block' block.block_id %}">返回修改</a>
+<a href="{% url 'archive:index' %}">返回archive</a>
+
+</body>
+</html>
