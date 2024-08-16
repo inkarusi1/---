@@ -77,6 +77,8 @@ def modify_block(request, block_id):
 
 def delete_block(request, block_id):
     block = get_object_or_404(BlockInfo, pk=block_id)
+    if block.superior_blocks.exists():
+        missing_children.add(block.block_name)
     block.delete()
     return HttpResponseRedirect(reverse("archive:index"))
 
@@ -104,7 +106,8 @@ def add_block(request):
         return render(request, "archive/index.html", {})
     else:
         block.save()
-        print(missing_children)
+        if request.POST['block_name'] in missing_children:
+            missing_children.remove(request.POST['block_name'])
         for b in block_list:
             code_hierarchy = CodeHierarchy(block_id=b, superior_block_id=block, is_leaf=True)
             code_hierarchy.save()
@@ -118,7 +121,7 @@ def add_blocks_from_excel(request):
             return HttpResponse("no file for upload")
         data = pd.read_excel(excel_file)
         id2block = {}
-        # 保存代码块信息
+        # 1. 保存代码块信息
         for i in range(len(data)):
             block = BlockInfo(block_name=data.loc[i, "代码块名称"], block_name_zh=data.loc[i, "代码块中文名称"],
                               lang=data.loc[i, "开发语言（生成代码语言）"], block_function=data.loc[i, "代码块作用"],
@@ -130,7 +133,7 @@ def add_blocks_from_excel(request):
                 # 如果存在，可以选择更新该对象，或者跳过插入新对象的步骤
                 continue
             block.save()
-        # 保存代码块层次信息
+        # 2. 保存代码块层次信息
         non_leaf_set = set()
         hierarchy_list = []
         print(f'id2block: {id2block}')
@@ -153,5 +156,9 @@ def add_blocks_from_excel(request):
             code_hierarchy = CodeHierarchy(block_id=id2block[block_id], superior_block_id=id2block[superior_block_id],
                                            is_leaf=(block_id not in non_leaf_set))
             code_hierarchy.save()
+        # 3. 修改missing_children
+        for (_, block) in id2block.items():
+            if block.block_name in missing_children:
+                missing_children.remove(block.block_name)
         return HttpResponseRedirect(reverse("archive:index"))
     return HttpResponseRedirect(reverse("archive:index"))
