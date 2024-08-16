@@ -131,6 +131,7 @@ def add_blocks_from_excel(request):
             # 检查是否已存在具有相同block_name的BlockInfo对象
             if BlockInfo.objects.filter(block_name=block_name).exists():
                 # 如果存在，可以选择更新该对象，或者跳过插入新对象的步骤
+                id2block[int(data.loc[i, "代码块id"])] = BlockInfo.objects.get(block_name=block_name)
                 continue
             block.save()
         # 2. 保存代码块层次信息
@@ -150,8 +151,9 @@ def add_blocks_from_excel(request):
         print(f'len of hierarchy_list: {len(hierarchy_list)}')
         for (block_id, superior_block_id) in hierarchy_list:
             print(f'block_id: {block_id}, superior_block_id: {superior_block_id}')
-            if CodeHierarchy.objects.filter(block_id=id2block[block_id],
-                                            superior_block_id=id2block[superior_block_id]).exists():
+            if block_id not in id2block or superior_block_id not in id2block:
+                continue
+            elif CodeHierarchy.objects.filter(block_id=id2block[block_id], superior_block_id=id2block[superior_block_id]).exists():
                 continue
             code_hierarchy = CodeHierarchy(block_id=id2block[block_id], superior_block_id=id2block[superior_block_id],
                                            is_leaf=(block_id not in non_leaf_set))
