@@ -33,6 +33,7 @@ def index(request):
     latest_block_list = BlockInfo.objects.order_by("-block_id")[:]
     context = {
         "latest_block_list": latest_block_list,
+        "missing_children": missing_children,
     }
     output = ", ".join([b.block_name for b in latest_block_list])
     # return HttpResponse("Hello, world. You're at the polls index.\n" + output)

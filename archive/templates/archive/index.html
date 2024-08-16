@@ -32,6 +32,17 @@
 <br />
 <br />
 
+<p>Missing children:</p>
+{% if missing_children %}
+    <ul>
+    {% for child in missing_children %}
+    <!-- <li><a href="/archive/{{ block.block_id }}/">{{ block.block_name }}</a></li>-->
+        <li>{{ child }}</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>No missing children are available.</p>
+{% endif %}
 
 </body>
 </html>
